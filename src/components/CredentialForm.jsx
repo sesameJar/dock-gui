@@ -71,8 +71,8 @@ function CredentialForm(props) {
                     onChange={handleChange('subject')}
                 >
                     {
-                        props.holders.map(holder => (
-                            <MenuItem key={holder.did} value={holder.did}>Ten</MenuItem>
+                        props.holders.map((holder, index) => (
+                            <MenuItem key={holder.did} value={holder.did}>{`holder${index+1}`}</MenuItem>
                         ))
                     }
                     

@@ -46,13 +46,14 @@ function App() {
         console.log("DID holder", holder2DID)
         //Mock Holder2
         const holder3DID = await generateDID(secretUri3)
-        console.log("DID holder2", holder3DID)
+        console.log("DID holder", holder3DID)
         //Mock Holder3
         const holder4DID = await generateDID(secretUri4)
-        console.log("DID holder3", holder4DID)
+        console.log("DID holder", holder4DID)
 
         setHoldersDID([holder2DID, holder3DID, holder4DID])
         // setHoldersDID([holder2DID])
+        // Registering all DIDs for future verification
 
         setLoading(false)
        }

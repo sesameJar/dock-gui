@@ -97,14 +97,14 @@ function PresentationForm(props) {
                 >
                     {
                         props.credentials.length > 0 ? props.credentials.map((holder, index) => (
-                            <MenuItem key={holder.did} value={holder}>{`holder${index+1}`}</MenuItem>
+                            <MenuItem key={holder.did} value={holder}>{`credential#${index+1}`}</MenuItem>
                         )) : <span>NO ITEM FOUND</span>
                     }
                     
                     </Select>
             </FormControl>
 
-            <Button disabled={props.credentials.length< 1} variant="outlined" color="primary" onClick={addNewPresentation} >New Presentation</Button>
+            <Button disabled={props.credentials.length< 1} variant="outlined" color="primary" onClick={addNewPresentation} >{props.credentials.length > 0 ? 'New Presentation' : 'no credentials found'}</Button>
 
         </>
     )
