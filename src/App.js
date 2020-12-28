@@ -31,10 +31,24 @@ function App() {
   })
 
  // handler for AddCredential Event 
-  const handleNewCredential = async credentialObj => { }
+  const handleNewCredential = async credentialObj => { 
+    console.log("CREDENTIAL Object ==>", credentialObj)
+    let vc = new VerifiableCredential(credentialObj.id);
+    vc.addContext(credentialObj.context)
+    vc.addSubject({id: credentialObj.subject})
+    vc.addType(credentialObj.type)
+    vc.setStatus({id: credentialObj.status, type : "CredentialStatusList2017"})
+  }
   
   // handler for AddPresentation Event 
-  const handleNewPresentation = async presentationObj => { }
+  const handleNewPresentation = async presentationObj => {
+    console.log("PRESENTATION Object==>", presentationObj)
+    let vp = new VerifiablePresentation(presentationObj.id);
+    vp.addContext(presentationObj.context)
+    vp.addType(presentationObj.type)
+    vp.setHolder(presentationObj.holder.did)
+    vp.addCredential(presentationObj.credential)
+   }
 
   function Render() {
     if (loading) {
