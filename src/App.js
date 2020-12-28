@@ -27,7 +27,7 @@ function App() {
   const [authorityDID, setAuthorityDID] = useState()
   const [holdersDID, setHoldersDID] = useState([])
 
-  useEffect(() => {
+   useEffect(() => {
     async function initDock (){
       setLoading(true)
       if (!dock.isInitialized() && !dock.isConnected) {
@@ -45,15 +45,14 @@ function App() {
         const holder2DID = await generateDID(secretUri2)
         console.log("DID holder", holder2DID)
         //Mock Holder2
-        // const holder3DID = await generateDID(secretUri3)
-        // console.log("DID holder", holder3DID)
-        // //Mock Holder3
-        // const holder4DID = await generateDID(secretUri4)
-        // console.log("DID holder", holder4DID)
+        const holder3DID = await generateDID(secretUri3)
+        console.log("DID holder2", holder3DID)
+        //Mock Holder3
+        const holder4DID = await generateDID(secretUri4)
+        console.log("DID holder3", holder4DID)
 
-        // setHoldersDID([holder2DID, holder3DID, holder4DID])
-        setHoldersDID([holder2DID])
-        // Registering all DIDs for future verification
+        setHoldersDID([holder2DID, holder3DID, holder4DID])
+        // setHoldersDID([holder2DID])
 
         setLoading(false)
        }
@@ -78,17 +77,22 @@ function App() {
     return {did, keyPair: account }
     // return did
   }
-
- // handler for AddCredential Event 
-  const handleNewCredential = async credentialObj => { 
+  
+  // handler for AddCredential Event 
+  const handleNewCredential = async credentialObj => {
     console.log("CREDENTIAL Object ==>", credentialObj)
     let vc = new VerifiableCredential(credentialObj.id);
     vc.addContext(credentialObj.context)
     vc.addSubject({id: credentialObj.subject})
     vc.addType(credentialObj.type)
     vc.setStatus({id: credentialObj.status, type : "CredentialStatusList2017"})
+    const issuerKey = getKeyDoc(authorityDID.did, authorityDID.keyPair, 'Sr25519VerificationKey2020')
+    //sign using issuer
+    let res = await vc.sign(issuerKey)
+    console.log(vc.toJSON(), res)
+    setCredentials([...credentials, vc.toJSON()])
   }
-  
+
   // handler for AddPresentation Event 
   const handleNewPresentation = async presentationObj => {
     console.log("PRESENTATION Object==>", presentationObj)
@@ -97,7 +101,10 @@ function App() {
     vp.addType(presentationObj.type)
     vp.setHolder(presentationObj.holder.did)
     vp.addCredential(presentationObj.credential)
-   }
+    const signerKey = getKeyDoc(presentationObj.holder.did, presentationObj.holder.keyPair, 'Sr25519VerificationKey2020')
+    await vp.sign(signerKey, 'some_challenge', 'some_domain' )
+    setPresentations([...presentations, vp.toJSON()])
+  }
 
   function Render() {
     if (loading) {
