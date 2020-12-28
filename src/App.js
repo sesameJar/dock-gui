@@ -45,14 +45,14 @@ function App() {
         const holder2DID = await generateDID(secretUri2)
         console.log("DID holder", holder2DID)
         //Mock Holder2
-        // const holder3DID = await generateDID(secretUri3)
-        // console.log("DID holder", holder3DID)
-        // //Mock Holder3
-        // const holder4DID = await generateDID(secretUri4)
-        // console.log("DID holder", holder4DID)
+        const holder3DID = await generateDID(secretUri3)
+        console.log("DID holder", holder3DID)
+        //Mock Holder3
+        const holder4DID = await generateDID(secretUri4)
+        console.log("DID holder", holder4DID)
 
-        // setHoldersDID([holder2DID, holder3DID, holder4DID])
-        setHoldersDID([holder2DID])
+        setHoldersDID([holder2DID, holder3DID, holder4DID])
+        // setHoldersDID([holder2DID])
         // Registering all DIDs for future verification
 
         setLoading(false)
@@ -96,8 +96,9 @@ function App() {
 
   // handler for AddPresentation Event 
   const handleNewPresentation = async presentationObj => {
-    if (presentationObj.holder.did === presentationObj.credential.credentialSubject[0].id) {// currently only covering one subject
-      alert(1)
+    if (presentationObj.holder.did !== presentationObj.credential.credentialSubject[0].id) {// currently only covering one subject
+      alert("Holder in credential does not match with the selected holder in presentation form.")
+      return
     }
     console.log("PRESENTATION Object==>", presentationObj)
     let vp = new VerifiablePresentation(presentationObj.id);
